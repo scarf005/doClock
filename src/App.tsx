@@ -1,69 +1,18 @@
-import {
-  ActionIcon,
-  Button,
-  CloseButton,
-  Grid,
-  Group,
-  SimpleGrid,
-  Stack,
-  TextInput,
-  Title,
-} from '@mantine/core'
-import { useClock } from './hooks/useClock'
-import { useRef, useState } from 'react'
-import { MinusIcon, PlusIcon } from '@radix-ui/react-icons'
-import { useInputState, useListState } from '@mantine/hooks'
+import { Center, SimpleGrid, Stack, Title } from '@mantine/core'
+import { useListState } from '@mantine/hooks'
+import { TodoList, TodoInput } from 'components'
+import { useClock } from 'hooks'
+import { npad } from 'utility'
 import './App.css'
 
-const Clock = () => <Title order={1}>{`${useClock()}`}</Title>
-
-interface TodoItemProps {
-  remove: () => void
-  children: string
-}
-const TodoItem = ({ remove, children }: TodoItemProps) => {
-  return (
-    <Group position="apart">
-      <Title order={2}>{children}</Title>
-      <CloseButton onClick={remove} title="remove todo" />
-    </Group>
-  )
-}
-
-interface TodoInputProps {
-  append: (...items: string[]) => void
-}
-const TodoInput = ({ append }: TodoInputProps) => {
-  const [str, setStr] = useInputState('')
+const Clock = () => {
+  const d = useClock()
+  const time = `${d.getHours()}:${npad(d.getHours())}:${npad(d.getSeconds())}`
 
   return (
-    <Group>
-      <TextInput value={str} onChange={setStr} />
-      <ActionIcon
-        onClick={() => {
-          append(str)
-          setStr('')
-        }}
-      >
-        <PlusIcon />
-      </ActionIcon>
-    </Group>
-  )
-}
-
-interface TodoListProps {
-  todos: string[]
-  remove: (...indices: number[]) => void
-}
-const TodoList = ({ todos, remove }: TodoListProps) => {
-  return (
-    <Stack>
-      {todos.map((todo, i) => (
-        <TodoItem key={i} remove={() => remove(i)}>
-          {todo}
-        </TodoItem>
-      ))}
-    </Stack>
+    <Title order={1} size="10vh">
+      {time}
+    </Title>
   )
 }
 
@@ -74,14 +23,16 @@ export const App = () => {
   ])
 
   return (
-    <div className="App">
-      <SimpleGrid cols={2} spacing="xl">
+    <SimpleGrid cols={2} spacing="xl">
+      <Center style={{ height: '80vh' }}>
         <Clock />
+      </Center>
+      <Center style={{ height: '80vh' }}>
         <Stack>
           <TodoList todos={todos} remove={remove} />
           <TodoInput append={append} />
         </Stack>
-      </SimpleGrid>
-    </div>
+      </Center>
+    </SimpleGrid>
   )
 }
