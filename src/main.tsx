@@ -10,8 +10,8 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       withNormalizeCSS
       theme={{
         headings: {
-          fontWeight: 100,
-          fontFamily: 'Roboto',
+          fontWeight: 200,
+          fontFamily: 'Roboto, Noto Sans KR, sans-serif',
         },
       }}
     >

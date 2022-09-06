@@ -1,17 +1,21 @@
-import { Center, SimpleGrid, Stack, Title } from '@mantine/core'
+import {
+  Center,
+  keyframes,
+  SimpleGrid,
+  Stack,
+  Text,
+  Title,
+} from '@mantine/core'
 import { useListState } from '@mantine/hooks'
 import { TodoList, TodoInput } from 'components'
 import { useClock } from 'hooks'
-import { npad } from 'utility'
-import './App.css'
+import { dateToDayString, npad } from 'utility'
+import './index.css'
 
 const Clock = () => {
-  const d = useClock()
-  const time = `${d.getHours()}:${npad(d.getHours())}:${npad(d.getSeconds())}`
-
   return (
     <Title order={1} size="10vh">
-      {time}
+      {dateToDayString(useClock())}
     </Title>
   )
 }
@@ -19,13 +23,21 @@ const Clock = () => {
 export const App = () => {
   const [todos, { append, remove }] = useListState<string>([
     'do something',
-    'bar',
+    '한글',
   ])
 
   return (
     <SimpleGrid cols={2} spacing="xl">
       <Center style={{ height: '80vh' }}>
         <Clock />
+        <Text
+          style={{
+            position: 'absolute',
+            transform: 'rotate(0.5rad) translateX(200px)',
+          }}
+        >
+          Do Something
+        </Text>
       </Center>
       <Center style={{ height: '80vh' }}>
         <Stack>
