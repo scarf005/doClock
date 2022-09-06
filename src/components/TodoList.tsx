@@ -1,50 +1,60 @@
 import {
   ActionIcon,
-  CloseButton,
   Group,
+  HoverCard,
   Stack,
+  Text,
   TextInput,
-  Title,
 } from '@mantine/core'
-import { PlusIcon } from '@radix-ui/react-icons'
-import { useHover, useInputState } from '@mantine/hooks'
+import { useInputState } from '@mantine/hooks'
+import { Todo } from 'Todo'
+import { TimeInput } from '@mantine/dates'
+import { IconClock, IconPlus } from '@tabler/icons'
+import { useRef, useState } from 'react'
+import { TodoItem } from './TodoItem'
 
 interface TodoInputProps {
-  append: (...items: string[]) => void
+  append: (...items: Todo[]) => void
 }
 export const TodoInput = ({ append }: TodoInputProps) => {
   const [input, setInput] = useInputState('')
+  const [time, setTime] = useState<Date>(new Date())
+
+  const send = () => {
+    if (!input) return
+    append(new Todo(input, time))
+    setInput('')
+  }
 
   return (
     <Group>
+      <TimeInput
+        value={time}
+        onChange={setTime}
+        withSeconds
+        styles={{ icon: { pointerEvents: 'all' } }}
+        icon={
+          <HoverCard>
+            <HoverCard.Target>
+              <ActionIcon onClick={() => setTime(new Date())}>
+                <IconClock stroke={1} size={26} />
+              </ActionIcon>
+            </HoverCard.Target>
+            <HoverCard.Dropdown>
+              <Text>Set to Current Time</Text>
+            </HoverCard.Dropdown>
+          </HoverCard>
+        }
+      />
       <TextInput value={input} onChange={setInput} />
-      <ActionIcon
-        onClick={() => {
-          append(input)
-          setInput('')
-        }}
-      >
-        <PlusIcon />
+      <ActionIcon onClick={send}>
+        <IconPlus stroke={1.25} />
       </ActionIcon>
     </Group>
   )
 }
-interface TodoItemProps {
-  remove: () => void
-  children: string
-}
-const TodoItem = ({ remove, children }: TodoItemProps) => {
-  const { hovered, ref } = useHover()
-
-  return (
-    <Group position="apart" ref={ref}>
-      <Title order={2}>{children}</Title>
-      {hovered && <CloseButton onClick={remove} title="remove todo" />}
-    </Group>
-  )
-}
 interface TodoListProps {
-  todos: string[]
+  todos: Todo[]
   remove: (...indices: number[]) => void
 }
 export const TodoList = ({ todos, remove }: TodoListProps) => {
@@ -52,7 +62,7 @@ export const TodoList = ({ todos, remove }: TodoListProps) => {
     <Stack>
       {todos.map((todo, i) => (
         <TodoItem key={i} remove={() => remove(i)}>
-          {todo}
+          {`${todo}`}
         </TodoItem>
       ))}
     </Stack>
