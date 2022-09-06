@@ -37,7 +37,7 @@ export const TodoInput = ({ append }: TodoInputProps) => {
           <HoverCard>
             <HoverCard.Target>
               <ActionIcon onClick={() => setTime(new Date())}>
-                <IconClock stroke={1} size={26} />
+                <IconClock stroke={0.8} size={26} />
               </ActionIcon>
             </HoverCard.Target>
             <HoverCard.Dropdown>
@@ -48,7 +48,7 @@ export const TodoInput = ({ append }: TodoInputProps) => {
       />
       <TextInput value={input} onChange={setInput} />
       <ActionIcon onClick={send}>
-        <IconPlus stroke={1.25} />
+        <IconPlus stroke={1} />
       </ActionIcon>
     </Group>
   )
