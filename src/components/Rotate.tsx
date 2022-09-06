@@ -1,22 +1,21 @@
 import { dateToRadian } from 'utility'
 
 export const QUARTER_CIRCLE = 1.57079633
-export const offset = '30vh'
+export const offset = '34vh'
 
-export const Rotate = ({
-  date,
-  children,
-}: {
+interface RotateProps {
   date: Date
   children: React.ReactNode
-}) => {
+  is24Clock?: boolean
+}
+export const Rotate = ({ date, children, is24Clock = false }: RotateProps) => {
   return (
     <div
       key={`${date}`}
       style={{
         position: 'absolute',
         transform: `rotateZ(${
-          dateToRadian(date) + QUARTER_CIRCLE
+          dateToRadian(date, is24Clock) - QUARTER_CIRCLE
         }rad) translateX(${offset})`,
         transformOrigin: 'center',
       }}

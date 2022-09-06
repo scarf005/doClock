@@ -46,8 +46,8 @@ export const dateToDegree = (d: Date, is24Clock = false) => {
   return is24Clock ? degrees / 2 : degrees
 }
 
-export const dateToRadian = (d: Date) => {
-  return degreesToRadians(dateToDegree(d))
+export const dateToRadian = (d: Date, is24Clock = false) => {
+  return degreesToRadians(dateToDegree(d, is24Clock))
 }
 
 export const isAM = (d: Date) => d.getHours() < 12
