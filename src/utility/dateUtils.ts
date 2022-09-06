@@ -36,8 +36,8 @@ export const dateToDayString = (d: Date) => dateToTime24h(d).map(npad).join(':')
 
 export const degreesToRadians = (degrees: number) => (degrees * Math.PI) / 180
 
-const HOUR_DEGREE = 30
-const MINUTE_DEGREE = 6
+const HOUR_DEGREE = 30 as const
+const MINUTE_DEGREE = 0.5 as const
 const SECOND_DEGREE = MINUTE_DEGREE / 60
 
 export const dateToDegree = (d: Date, is24Clock = false) => {
