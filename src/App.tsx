@@ -1,14 +1,15 @@
 import { Center, SimpleGrid, Stack, Title } from '@mantine/core'
 import { useListState } from '@mantine/hooks'
-import { Rotate, TodoInput, TodoItem, TodoList } from 'components'
+import { OFFSET, Rotate, TodoInput, TodoItem, TodoList } from 'components'
 import { Todo } from 'data'
 import dayjs from 'dayjs'
 import { useClock } from 'hooks'
+import { dateToDegree, degreesToRadian } from 'utility'
 import './index.css'
 
-const Clock = ({ is24Clock = true }: { is24Clock?: boolean }) => (
+const Clock = ({ is24Clock = false }: { is24Clock?: boolean }) => (
   <Title order={1} size="8vh">
-    {dayjs(useClock()).format(is24Clock ? 'HH:mm:ss' : 'hh:mm:ss a')}
+    {dayjs(useClock()).format(is24Clock ? 'HH:mm:ss' : 'hh:mm:ssa') + ' >'}
   </Title>
 )
 
@@ -25,7 +26,12 @@ export const App = () => {
       <Center style={{ height: '80vh' }}>
         <Clock />
         {todos.map((todo, i) => (
-          <Rotate date={todo.date} is24Clock={true}>
+          <Rotate
+            radian={degreesToRadian(
+              dateToDegree(todo.date, true) - dateToDegree(new Date(), true)
+            )}
+            offset={OFFSET}
+          >
             <TodoItem remove={() => remove(i)}>{todo.title}</TodoItem>
           </Rotate>
         ))}
