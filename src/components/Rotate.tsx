@@ -1,4 +1,4 @@
-import { dateToRadian } from 'utility'
+import { dateToDegree, degreesToRadian } from 'utility'
 
 export const QUARTER_CIRCLE = 1.57079633
 export const offset = '34vh'
@@ -15,7 +15,7 @@ export const Rotate = ({ date, children, is24Clock = false }: RotateProps) => {
       style={{
         position: 'absolute',
         transform: `rotateZ(${
-          dateToRadian(date, is24Clock) - QUARTER_CIRCLE
+          degreesToRadian(dateToDegree(date, is24Clock)) - QUARTER_CIRCLE
         }rad) translateX(${offset})`,
         transformOrigin: 'center',
       }}

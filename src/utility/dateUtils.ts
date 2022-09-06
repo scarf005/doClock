@@ -1,5 +1,3 @@
-import { npad } from './npad'
-
 // prettier-ignore
 type Hours = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23
 // prettier-ignore
@@ -29,12 +27,7 @@ export const dateToTime12h = (d: Date) => {
   return [h12 as Hours, m, s, ampm] as const
 }
 
-/**
- * @returns ISO 8601 time string (HH:MM:SS)
- */
-export const dateToDayString = (d: Date) => dateToTime24h(d).map(npad).join(':')
-
-export const degreesToRadians = (degrees: number) => (degrees * Math.PI) / 180
+export const degreesToRadian = (degrees: number) => (degrees * Math.PI) / 180
 
 const HOUR_DEGREE = 30 as const
 const MINUTE_DEGREE = 0.5 as const
@@ -44,10 +37,6 @@ export const dateToDegree = (d: Date, is24Clock = false) => {
   const [h, m, s] = dateToTime24h(d)
   const degrees = h * HOUR_DEGREE + m * MINUTE_DEGREE + s * SECOND_DEGREE
   return is24Clock ? degrees / 2 : degrees
-}
-
-export const dateToRadian = (d: Date, is24Clock = false) => {
-  return degreesToRadians(dateToDegree(d, is24Clock))
 }
 
 export const isAM = (d: Date) => d.getHours() < 12

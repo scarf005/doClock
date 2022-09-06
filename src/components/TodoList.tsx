@@ -10,7 +10,7 @@ import { useInputState } from '@mantine/hooks'
 import { Todo } from 'data'
 import { TimeInput } from '@mantine/dates'
 import { IconClock, IconPlus } from '@tabler/icons'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { TodoItem } from './TodoItem'
 
 interface TodoInputProps {

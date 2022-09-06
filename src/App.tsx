@@ -6,7 +6,7 @@ import dayjs from 'dayjs'
 import { useClock } from 'hooks'
 import './index.css'
 
-const Clock = ({ is24Clock = false }: { is24Clock?: boolean }) => (
+const Clock = ({ is24Clock = true }: { is24Clock?: boolean }) => (
   <Title order={1} size="8vh">
     {dayjs(useClock()).format(is24Clock ? 'HH:mm:ss' : 'hh:mm:ss a')}
   </Title>
