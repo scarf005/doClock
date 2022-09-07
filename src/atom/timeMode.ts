@@ -1,4 +1,4 @@
-import { atomWithStorage } from 'jotai/utils'
+import { atomWithToggle } from './atomWithToggle'
 
-type timeMode = '24h' | '12h'
-export const timeModeAtom = atomWithStorage<timeMode>('timeMode', '24h')
+export type TimeMode = '24h' | '12h'
+export const timeModeAtom = atomWithToggle<TimeMode>(['12h', '24h'])
