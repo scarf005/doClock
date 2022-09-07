@@ -4,32 +4,40 @@ import { Rotate } from 'components'
 import dayjs from 'dayjs'
 import { useClock } from 'hooks'
 import { ReactElement } from 'react'
-import { degreesToRadian, HOUR_DEGREE, MINUTE_LINE_DEGREE } from 'utility'
+import {
+  degreesToRadian,
+  HOUR_DEGREE,
+  MINUTE_LINE_DEGREE,
+  partition,
+} from 'utility'
 
 interface MarkerProps {
-  length: number
-  degree: number
+  ns: number[]
   icon: ReactElement
 }
-const Markers = ({ length, degree, icon }: MarkerProps) => (
+const Markers = ({ ns, icon }: MarkerProps) => (
   <>
-    {Array.from({ length }, (_, i) => i * degree).map(i => (
+    {ns.map(i => (
       <Rotate key={i} radian={degreesToRadian(i)} option={{ offset: '27vh' }}>
         {icon}
       </Rotate>
     ))}
   </>
 )
-export const Clock = ({ is24Clock = false }: { is24Clock?: boolean }) => (
-  <>
-    <Title order={1} size="8vh">
-      {dayjs(useClock()).format(is24Clock ? 'HH:mm:ss' : 'hh:mm:ssa') + ' >'}
-    </Title>
-    <Markers length={12} degree={HOUR_DEGREE} icon={<IconMinus size={10} />} />
-    <Markers
-      length={60}
-      degree={MINUTE_LINE_DEGREE}
-      icon={<IconMinus size={5} />}
-    />
-  </>
+const [hours, minutes] = partition(
+  Array.from({ length: 60 }, (_, i) => i * MINUTE_LINE_DEGREE),
+  x => x % HOUR_DEGREE === 0
 )
+export const Clock = ({ is24Clock = false }: { is24Clock?: boolean }) => {
+  const time = dayjs(useClock()).format(is24Clock ? 'HH:mm:ss' : 'hh:mm:ssa')
+
+  return (
+    <>
+      <Title order={1} size="8vh">
+        {time + ' >'}
+      </Title>
+      <Markers ns={hours} icon={<IconMinus size={8} />} />
+      <Markers ns={minutes} icon={<IconMinus size={5} />} />
+    </>
+  )
+}
