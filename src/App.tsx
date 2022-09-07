@@ -1,6 +1,7 @@
 import { Center, SimpleGrid, Stack } from '@mantine/core'
 import { Clock, Rotate, TodoInput, TodoItem, TodoList } from 'components'
 import { Todo } from 'data'
+import dayjs from 'dayjs'
 import { useLocalStorageList } from 'hooks'
 import { dateToDegree, degreesToRadian, isSameMeridian } from 'utility'
 import './index.css'
@@ -14,12 +15,11 @@ export const App = () => {
       new Todo('저녁 약속', new Date('2022-09-06 6:00:00')),
       new Todo('10시', new Date('2022-09-06 10:00:00')),
       new Todo('10시 30분', new Date('2022-09-06 10:30:00')),
-      // new Todo('장보러 가기', new Date('2022-09-06 12:00:00')),
-      // new Todo('do something', new Date('2022-09-06 18:00:00')),
+      new Todo('장보러 가기', new Date('2022-09-06 12:00:00')),
+      new Todo('do something', new Date('2022-09-06 18:00:00')),
     ],
     deserialize: value => Todo.fromJSONList(value),
   })
-  console.log('todos', todos)
 
   return (
     <SimpleGrid cols={2} spacing="xl">
@@ -38,9 +38,11 @@ export const App = () => {
       </Center>
       <Center style={{ height: '80vh' }}>
         <Stack>
-          {todos.map((todo, i) => (
-            <TodoItem key={i} remove={() => remove(i)} todo={todo} />
-          ))}
+          {todos
+            .sort((a, b) => dayjs(a.date).diff(dayjs(b.date)))
+            .map((todo, i) => (
+              <TodoItem key={todo.id} remove={() => remove(i)} todo={todo} />
+            ))}
           <TodoInput append={append} />
         </Stack>
       </Center>
