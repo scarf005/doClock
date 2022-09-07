@@ -5,5 +5,12 @@ import { useAtom } from 'jotai'
 export const ToggleTimeMode = () => {
   const [mode, toggle] = useAtom(timeModeAtom)
 
-  return <Switch color="gray" label={`${mode}`} onChange={toggle} />
+  return (
+    <Switch
+      color="gray"
+      label={mode}
+      checked={mode === '24h'}
+      onChange={toggle}
+    />
+  )
 }
