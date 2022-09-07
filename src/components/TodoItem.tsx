@@ -12,7 +12,7 @@ export const TodoItem = ({ remove, todo }: TodoItemProps) => {
 
   return (
     <Group position="apart" ref={ref}>
-      <Title order={2} color={todo.isTime() ? 'red' : 'black'}>
+      <Title order={2} color={todo.getColor()}>
         {todo.title}
       </Title>
       {hovered && (
