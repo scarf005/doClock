@@ -13,6 +13,12 @@ export class Todo {
     return `${dayjs(this.date).format('HH:mm:ss')}: ${this.title}`
   }
 
+  isTime() {
+    const diff = dayjs(this.date).diff(dayjs(), 'minute')
+    console.log(this.date,diff)
+    return 0 <= diff && diff <= 15
+  }
+
   static fromJSON(json: string) {
     const { title, date, id } = JSON.parse(json)
     return new Todo(title, new Date(date), id)
