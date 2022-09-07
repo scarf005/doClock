@@ -14,7 +14,7 @@ interface MarkerProps {
 const Markers = ({ length, degree, icon }: MarkerProps) => (
   <>
     {Array.from({ length }, (_, i) => i * degree).map(i => (
-      <Rotate radian={degreesToRadian(i)} option={{ offset: '27vh' }}>
+      <Rotate key={i} radian={degreesToRadian(i)} option={{ offset: '27vh' }}>
         {icon}
       </Rotate>
     ))}
