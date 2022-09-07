@@ -53,16 +53,3 @@ export const TodoInput = ({ append }: TodoInputProps) => {
     </Group>
   )
 }
-interface TodoListProps {
-  todos: Todo[]
-  remove: (...indices: number[]) => void
-}
-export const TodoList = ({ todos, remove }: TodoListProps) => {
-  return (
-    <Stack>
-      {todos.map((todo, i) => (
-        <TodoItem key={i} remove={() => remove(i)} todo={todo} />
-      ))}
-    </Stack>
-  )
-}

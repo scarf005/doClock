@@ -2,7 +2,7 @@ import { Center, SimpleGrid, Stack } from '@mantine/core'
 import { Clock, Rotate, TodoInput, TodoItem, TodoList } from 'components'
 import { Todo } from 'data'
 import { useLocalStorageList } from 'hooks'
-import { dateToDegree, degreesToRadian } from 'utility'
+import { dateToDegree, degreesToRadian, isSameMeridian } from 'utility'
 import './index.css'
 
 export const App = () => {
@@ -25,18 +25,22 @@ export const App = () => {
     <SimpleGrid cols={2} spacing="xl">
       <Center style={{ height: '80vh' }}>
         <Clock />
-        {todos.map((todo, i) => (
-          <Rotate
-            key={todo.id}
-            radian={degreesToRadian(dateToDegree(todo.date))}
-          >
-            <TodoItem remove={() => remove(i)} todo={todo} />
-          </Rotate>
-        ))}
+        {todos
+          .filter(todo => isSameMeridian(todo.date))
+          .map((todo, i) => (
+            <Rotate
+              key={todo.id}
+              radian={degreesToRadian(dateToDegree(todo.date))}
+            >
+              <TodoItem remove={() => remove(i)} todo={todo} />
+            </Rotate>
+          ))}
       </Center>
       <Center style={{ height: '80vh' }}>
         <Stack>
-          <TodoList todos={todos} remove={remove} />
+          {todos.map((todo, i) => (
+            <TodoItem key={i} remove={() => remove(i)} todo={todo} />
+          ))}
           <TodoInput append={append} />
         </Stack>
       </Center>
