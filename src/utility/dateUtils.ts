@@ -43,3 +43,5 @@ export const dateToDegree = (d: Date, is24Clock = false) => {
 
 export const isAM = (d: Date) => d.getHours() < 12
 export const isPM = (d: Date) => d.getHours() >= 12
+export const isSameMeridian = (d1: Date, d2 = new Date()) =>
+  (isAM(d1) && isAM(d2)) || (isPM(d1) && isPM(d2))
