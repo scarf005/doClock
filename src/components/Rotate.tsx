@@ -1,3 +1,5 @@
+import { assert } from 'console'
+import { useClock } from 'hooks'
 import { dateToDegree, degreesToRadian } from 'utility'
 
 export const QUARTER_CIRCLE = 1.57079633
@@ -7,15 +9,16 @@ interface RotateOption {
   offset?: number | string
   relative?: boolean
 }
-const defaultOption = { offset: OFFSET, relative: true }
 interface RotateProps {
   radian: number
   option?: RotateOption
   children: React.ReactNode
 }
+const defaultOption = { offset: OFFSET, relative: true }
 export const Rotate = ({ radian, option = {}, children }: RotateProps) => {
   const opt = { ...defaultOption, ...option }
-  const rad = opt.relative ? radian - dateToDegree(new Date()) : radian
+  const rel_rad = degreesToRadian(dateToDegree(useClock()))
+  const rad = opt.relative ? radian - rel_rad : radian
 
   return (
     <div

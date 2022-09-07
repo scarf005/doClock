@@ -36,7 +36,8 @@ export const SECOND_DEGREE = MINUTE_DEGREE / 60
 
 export const dateToDegree = (d: Date, is24Clock = false) => {
   const [h, m, s] = dateToTime24h(d)
-  const degrees = h * HOUR_DEGREE + m * MINUTE_DEGREE + s * SECOND_DEGREE
+  const degrees =
+    (h * HOUR_DEGREE + m * MINUTE_DEGREE + s * SECOND_DEGREE) % 360
   return is24Clock ? degrees / 2 : degrees
 }
 
