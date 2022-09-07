@@ -1,2 +1,2 @@
 export * from './atomWithToggle'
-export * from './timeMode'
+export * from './toggleMode'
