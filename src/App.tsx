@@ -1,4 +1,5 @@
 import { Center, Group, SimpleGrid, Stack } from '@mantine/core'
+import { timeModeAtom } from 'atom'
 import {
   Clock,
   Rotate,
@@ -10,10 +11,17 @@ import {
 import { Todo } from 'data'
 import dayjs from 'dayjs'
 import { useLocalStorageList } from 'hooks'
-import { dateToDegree, degreesToRadian, isSameMeridian } from 'utility'
+import { useAtomValue } from 'jotai'
+import {
+  dateToDegree,
+  degreesToRadian,
+  filterIf,
+  isSameMeridian,
+} from 'utility'
 import './index.css'
 
 export const App = () => {
+  const mode = useAtomValue(timeModeAtom)
   const [todos, { append, remove }] = useLocalStorageList<Todo>({
     key: 'todos',
     defaultValue: [
@@ -37,24 +45,30 @@ export const App = () => {
       <SimpleGrid cols={2} spacing="xl">
         <Center style={{ height: '80vh' }}>
           <Clock />
-          {todos
-            .filter(todo => isSameMeridian(todo.date))
-            .map((todo, i) => (
-              <Rotate
-                key={todo.id}
-                radian={degreesToRadian(dateToDegree(todo.date))}
-              >
-                <TodoItem remove={() => remove(i)} todo={todo} />
-              </Rotate>
-            ))}
+          {filterIf(mode === '12h', todos, todo =>
+            isSameMeridian(todo.date)
+          ).map((todo, i) => (
+            <Rotate
+              key={todo.id}
+              radian={degreesToRadian(dateToDegree(todo.date))}
+            >
+              <TodoItem remove={() => remove(i)} todo={todo} />
+            </Rotate>
+          ))}
         </Center>
         <Center style={{ height: '80vh' }}>
           <Stack>
-            {todos
-              .sort((a, b) => dayjs(a.date).diff(dayjs(b.date)))
-              .map((todo, i) => (
-                <TodoItem key={todo.id} remove={() => remove(i)} todo={todo} />
-              ))}
+            <Stack style={{ height: '40vh', overflow: 'scroll' }}>
+              {todos
+                .sort((a, b) => dayjs(a.date).diff(dayjs(b.date)))
+                .map((todo, i) => (
+                  <TodoItem
+                    key={todo.id}
+                    remove={() => remove(i)}
+                    todo={todo}
+                  />
+                ))}
+            </Stack>
             <TodoInput append={append} />
           </Stack>
         </Center>
