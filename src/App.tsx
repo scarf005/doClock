@@ -1,5 +1,6 @@
 import { Center, SimpleGrid, Stack } from '@mantine/core'
 import { Clock, Rotate, TodoInput, TodoItem, TodoList } from 'components'
+import { ToggleTimeMode } from 'components/ToggleTimeMode'
 import { Todo } from 'data'
 import dayjs from 'dayjs'
 import { useLocalStorageList } from 'hooks'
@@ -22,30 +23,33 @@ export const App = () => {
   })
 
   return (
-    <SimpleGrid cols={2} spacing="xl">
-      <Center style={{ height: '80vh' }}>
-        <Clock />
-        {todos
-          .filter(todo => isSameMeridian(todo.date))
-          .map((todo, i) => (
-            <Rotate
-              key={todo.id}
-              radian={degreesToRadian(dateToDegree(todo.date))}
-            >
-              <TodoItem remove={() => remove(i)} todo={todo} />
-            </Rotate>
-          ))}
-      </Center>
-      <Center style={{ height: '80vh' }}>
-        <Stack>
+    <>
+      <ToggleTimeMode />
+      <SimpleGrid cols={2} spacing="xl">
+        <Center style={{ height: '80vh' }}>
+          <Clock />
           {todos
-            .sort((a, b) => dayjs(a.date).diff(dayjs(b.date)))
+            .filter(todo => isSameMeridian(todo.date))
             .map((todo, i) => (
-              <TodoItem key={todo.id} remove={() => remove(i)} todo={todo} />
+              <Rotate
+                key={todo.id}
+                radian={degreesToRadian(dateToDegree(todo.date))}
+              >
+                <TodoItem remove={() => remove(i)} todo={todo} />
+              </Rotate>
             ))}
-          <TodoInput append={append} />
-        </Stack>
-      </Center>
-    </SimpleGrid>
+        </Center>
+        <Center style={{ height: '80vh' }}>
+          <Stack>
+            {todos
+              .sort((a, b) => dayjs(a.date).diff(dayjs(b.date)))
+              .map((todo, i) => (
+                <TodoItem key={todo.id} remove={() => remove(i)} todo={todo} />
+              ))}
+            <TodoInput append={append} />
+          </Stack>
+        </Center>
+      </SimpleGrid>
+    </>
   )
 }
