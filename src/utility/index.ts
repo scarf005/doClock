@@ -1,2 +1,2 @@
 export * from './dateUtils'
-export * from './partition'
+export * from './arrayUtils'
