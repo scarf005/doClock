@@ -18,7 +18,7 @@ interface MarkerProps {
 const Markers = ({ ns, icon }: MarkerProps) => (
   <>
     {ns.map(i => (
-      <Rotate key={i} radian={degreesToRadian(i)} option={{ offset: '27vh' }}>
+      <Rotate key={i} radian={degreesToRadian(i)} offset="27vh">
         {icon}
       </Rotate>
     ))}

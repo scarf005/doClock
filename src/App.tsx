@@ -1,6 +1,12 @@
-import { Center, SimpleGrid, Stack } from '@mantine/core'
-import { Clock, Rotate, TodoInput, TodoItem, TodoList } from 'components'
-import { ToggleTimeMode } from 'components/ToggleTimeMode'
+import { Center, Group, SimpleGrid, Stack } from '@mantine/core'
+import {
+  Clock,
+  Rotate,
+  TodoInput,
+  TodoItem,
+  ToggleRotationMode,
+  ToggleTimeMode,
+} from 'components'
 import { Todo } from 'data'
 import dayjs from 'dayjs'
 import { useLocalStorageList } from 'hooks'
@@ -24,7 +30,10 @@ export const App = () => {
 
   return (
     <>
-      <ToggleTimeMode />
+      <Group>
+        <ToggleTimeMode />
+        <ToggleRotationMode />
+      </Group>
       <SimpleGrid cols={2} spacing="xl">
         <Center style={{ height: '80vh' }}>
           <Clock />
