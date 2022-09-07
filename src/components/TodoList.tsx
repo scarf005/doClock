@@ -61,9 +61,7 @@ export const TodoList = ({ todos, remove }: TodoListProps) => {
   return (
     <Stack>
       {todos.map((todo, i) => (
-        <TodoItem key={i} remove={() => remove(i)}>
-          {`${todo}`}
-        </TodoItem>
+        <TodoItem key={i} remove={() => remove(i)} todo={todo} />
       ))}
     </Stack>
   )

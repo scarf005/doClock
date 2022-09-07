@@ -30,7 +30,7 @@ export const App = () => {
             key={todo.id}
             radian={degreesToRadian(dateToDegree(todo.date))}
           >
-            <TodoItem remove={() => remove(i)}>{todo.title}</TodoItem>
+            <TodoItem remove={() => remove(i)} todo={todo} />
           </Rotate>
         ))}
       </Center>
