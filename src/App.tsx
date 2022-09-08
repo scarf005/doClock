@@ -22,7 +22,7 @@ import './index.css'
 
 export const App = () => {
   const mode = useAtomValue(timeModeAtom)
-  const [todos, { append, remove }] = useLocalStorageList<Todo>({
+  const [todos, { append, filter }] = useLocalStorageList<Todo>({
     key: 'todos',
     defaultValue: [
       new Todo('새벽', new Date('2022-09-06 00:00:00')),
@@ -35,6 +35,8 @@ export const App = () => {
     ],
     deserialize: value => Todo.fromJSONList(value),
   })
+  const remove = (idToRemove: string) => () =>
+    filter(it => it.id !== idToRemove)
 
   return (
     <>
@@ -52,7 +54,7 @@ export const App = () => {
               key={todo.id}
               radian={degreesToRadian(dateToDegree(todo.date))}
             >
-              <TodoItem remove={() => remove(i)} todo={todo} />
+              <TodoItem remove={remove(todo.id)} todo={todo} />
             </Rotate>
           ))}
         </Center>
@@ -61,10 +63,10 @@ export const App = () => {
             <Stack style={{ height: '40vh', overflow: 'scroll' }}>
               {todos
                 .sort((a, b) => dayjs(a.date).diff(dayjs(b.date)))
-                .map((todo, i) => (
+                .map((todo) => (
                   <TodoItem
                     key={todo.id}
-                    remove={() => remove(i)}
+                    remove={remove(todo.id)}
                     todo={todo}
                   />
                 ))}
