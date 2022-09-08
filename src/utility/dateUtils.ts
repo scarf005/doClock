@@ -30,9 +30,21 @@ export const dateToTime12h = (d: Date) => {
 export const degreesToRadian = (degrees: number) => (degrees * Math.PI) / 180
 
 export const HOUR_DEGREE = 30 as const
-export const MINUTE_DEGREE = 0.5 as const
-export const MINUTE_LINE_DEGREE = 6 as const
+export const MINUTE_DEGREE = HOUR_DEGREE / 60
 export const SECOND_DEGREE = MINUTE_DEGREE / 60
+
+export const HOUR_HAND_DEGREE = 30 as const
+export const MINUTE_HAND_DEGREE = 6 as const
+export const SECOND_HAND_DEGREE = MINUTE_HAND_DEGREE
+
+export const secondHandToRadian = () =>
+  degreesToRadian(new Date().getSeconds() * SECOND_HAND_DEGREE)
+export const minuteHandToRadian = () =>
+  degreesToRadian(new Date().getMinutes() * MINUTE_HAND_DEGREE)
+export const hourHandToRadian = (is24Clock = false) =>
+  degreesToRadian(
+    (new Date().getHours() * HOUR_HAND_DEGREE) / (is24Clock ? 1 : 2)
+  )
 
 export const dateToDegree = (d: Date, is24Clock = false) => {
   const [h, m, s] = dateToTime24h(d)
