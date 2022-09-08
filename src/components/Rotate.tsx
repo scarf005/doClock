@@ -13,8 +13,9 @@ interface RotateProps {
 }
 export const Rotate = ({ radian, offset = OFFSET, children }: RotateProps) => {
   const isAbsolute = useAtomValue(isAbsoluteRotation)
-  const relativeRadian = radian - degreesToRadian(dateToDegree(useClock()))
-  const rad = isAbsolute ? radian : relativeRadian
+  const rad = isAbsolute
+    ? radian - QUARTER_CIRCLE
+    : radian - degreesToRadian(dateToDegree(new Date()))
 
   return (
     <div
@@ -22,7 +23,6 @@ export const Rotate = ({ radian, offset = OFFSET, children }: RotateProps) => {
       style={{
         position: 'absolute',
         transform: `rotateZ(${rad}rad) translateX(${offset})`,
-        transformOrigin: 'center',
       }}
     >
       {children}
