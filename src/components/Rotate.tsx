@@ -1,32 +1,28 @@
-import { assert } from 'console'
+import { isAbsoluteRotation } from 'atom'
 import { useClock } from 'hooks'
+import { useAtomValue } from 'jotai'
 import { dateToDegree, degreesToRadian } from 'utility'
 
 export const QUARTER_CIRCLE = 1.57079633
 export const OFFSET = '34vh'
 
-interface RotateOption {
-  offset?: number | string
-  relative?: boolean
-}
 interface RotateProps {
   radian: number
-  option?: RotateOption
+  offset?: number | string
   children: React.ReactNode
 }
-const defaultOption = { offset: OFFSET, relative: true }
-export const Rotate = ({ radian, option = {}, children }: RotateProps) => {
-  const opt = { ...defaultOption, ...option }
-  const rel_rad = degreesToRadian(dateToDegree(useClock()))
-  const rad = opt.relative ? radian - rel_rad : radian
+export const Rotate = ({ radian, offset = OFFSET, children }: RotateProps) => {
+  const isAbsolute = useAtomValue(isAbsoluteRotation)
+  const rad = isAbsolute
+    ? radian - QUARTER_CIRCLE
+    : radian - degreesToRadian(dateToDegree(new Date()))
 
   return (
     <div
       key={radian}
       style={{
         position: 'absolute',
-        transform: `rotateZ(${rad}rad) translateX(${opt.offset})`,
-        transformOrigin: 'center',
+        transform: `rotateZ(${rad}rad) translateX(${offset})`,
       }}
     >
       {children}

@@ -6,7 +6,12 @@ import {
   Text,
   TextInput,
 } from '@mantine/core'
-import { useInputState } from '@mantine/hooks'
+import {
+  getHotkeyHandler,
+  useFocusWithin,
+  useHotkeys,
+  useInputState,
+} from '@mantine/hooks'
 import { Todo } from 'data'
 import { TimeInput } from '@mantine/dates'
 import { IconClock, IconPlus } from '@tabler/icons'
@@ -19,6 +24,10 @@ interface TodoInputProps {
 export const TodoInput = ({ append }: TodoInputProps) => {
   const [input, setInput] = useInputState('')
   const [time, setTime] = useState<Date>(new Date())
+  const { ref, focused } = useFocusWithin()
+  const handleSend = () => {
+    if (focused) send()
+  }
 
   const send = () => {
     if (!input) return
@@ -46,25 +55,15 @@ export const TodoInput = ({ append }: TodoInputProps) => {
           </HoverCard>
         }
       />
-      <TextInput value={input} onChange={setInput} />
+      <TextInput
+        ref={ref}
+        value={input}
+        onChange={setInput}
+        onKeyDown={getHotkeyHandler([['Enter', handleSend]])}
+      />
       <ActionIcon onClick={send}>
         <IconPlus stroke={1} />
       </ActionIcon>
     </Group>
-  )
-}
-interface TodoListProps {
-  todos: Todo[]
-  remove: (...indices: number[]) => void
-}
-export const TodoList = ({ todos, remove }: TodoListProps) => {
-  return (
-    <Stack>
-      {todos.map((todo, i) => (
-        <TodoItem key={i} remove={() => remove(i)}>
-          {`${todo}`}
-        </TodoItem>
-      ))}
-    </Stack>
   )
 }

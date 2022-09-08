@@ -14,7 +14,6 @@ const loadLocalStorage = <T>({
   return raw ? deserialize(raw) : defaultValue
 }
 
-
 interface useLocalStorageList<T> {
   key: string
   defaultValue: T[]
@@ -33,10 +32,7 @@ export const useLocalStorageList = <T = string>({
   )
 
   useEffect(() => {
-    if (!isFirstMount) {
-      console.log('saving...')
-      localStorage.setItem(key, serialize(list))
-    }
+    if (!isFirstMount) localStorage.setItem(key, serialize(list))
   }, [serialize(list)])
 
   return [list, handlers]

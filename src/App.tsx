@@ -1,12 +1,28 @@
-import { Center, SimpleGrid, Stack } from '@mantine/core'
-import { Clock, Rotate, TodoInput, TodoItem, TodoList } from 'components'
+import { Center, Group, SimpleGrid, Stack } from '@mantine/core'
+import { timeModeAtom } from 'atom'
+import {
+  Clock,
+  Rotate,
+  TodoInput,
+  TodoItem,
+  ToggleRotationMode,
+  ToggleTimeMode,
+} from 'components'
 import { Todo } from 'data'
+import dayjs from 'dayjs'
 import { useLocalStorageList } from 'hooks'
-import { dateToDegree, degreesToRadian } from 'utility'
+import { useAtomValue } from 'jotai'
+import {
+  dateToDegree,
+  degreesToRadian,
+  filterIf,
+  isSameMeridian,
+} from 'utility'
 import './index.css'
 
 export const App = () => {
-  const [todos, { append, remove }] = useLocalStorageList<Todo>({
+  const mode = useAtomValue(timeModeAtom)
+  const [todos, { append, filter }] = useLocalStorageList<Todo>({
     key: 'todos',
     defaultValue: [
       new Todo('새벽', new Date('2022-09-06 00:00:00')),
@@ -14,32 +30,51 @@ export const App = () => {
       new Todo('저녁 약속', new Date('2022-09-06 6:00:00')),
       new Todo('10시', new Date('2022-09-06 10:00:00')),
       new Todo('10시 30분', new Date('2022-09-06 10:30:00')),
-      // new Todo('장보러 가기', new Date('2022-09-06 12:00:00')),
-      // new Todo('do something', new Date('2022-09-06 18:00:00')),
+      new Todo('장보러 가기', new Date('2022-09-06 12:00:00')),
+      new Todo('do something', new Date('2022-09-06 18:00:00')),
     ],
     deserialize: value => Todo.fromJSONList(value),
   })
-  console.log('todos', todos)
+  const remove = (idToRemove: string) => () =>
+    filter(it => it.id !== idToRemove)
 
   return (
-    <SimpleGrid cols={2} spacing="xl">
-      <Center style={{ height: '80vh' }}>
-        <Clock />
-        {todos.map((todo, i) => (
-          <Rotate
-            key={todo.id}
-            radian={degreesToRadian(dateToDegree(todo.date))}
-          >
-            <TodoItem remove={() => remove(i)}>{todo.title}</TodoItem>
-          </Rotate>
-        ))}
-      </Center>
-      <Center style={{ height: '80vh' }}>
-        <Stack>
-          <TodoList todos={todos} remove={remove} />
-          <TodoInput append={append} />
-        </Stack>
-      </Center>
-    </SimpleGrid>
+    <>
+      <Group>
+        <ToggleTimeMode />
+        <ToggleRotationMode />
+      </Group>
+      <SimpleGrid cols={2} spacing="xl">
+        <Center style={{ height: '80vh' }}>
+          <Clock />
+          {filterIf(mode === '12h', todos, todo =>
+            isSameMeridian(todo.date)
+          ).map((todo, i) => (
+            <Rotate
+              key={todo.id}
+              radian={degreesToRadian(dateToDegree(todo.date))}
+            >
+              <TodoItem remove={remove(todo.id)} todo={todo} />
+            </Rotate>
+          ))}
+        </Center>
+        <Center style={{ height: '80vh' }}>
+          <Stack>
+            <Stack style={{ height: '40vh', overflow: 'scroll' }}>
+              {todos
+                .sort((a, b) => dayjs(a.date).diff(dayjs(b.date)))
+                .map((todo) => (
+                  <TodoItem
+                    key={todo.id}
+                    remove={remove(todo.id)}
+                    todo={todo}
+                  />
+                ))}
+            </Stack>
+            <TodoInput append={append} />
+          </Stack>
+        </Center>
+      </SimpleGrid>
+    </>
   )
 }
